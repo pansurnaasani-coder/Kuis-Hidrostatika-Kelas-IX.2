@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Tekanan Hidrostatis - Kelas IX MTs</title>
+<style>
+:root{--navy:#12345a;--blue:#1769aa;--gold:#f2b544;--pale:#eef6fc;--ink:#243447;--green:#188653;--red:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#eaf4fb,#fff8e8);font-family:Arial,Helvetica,sans-serif;color:var(--ink);line-height:1.55}
+.wrap{max-width:850px;margin:28px auto;padding:16px}
+.card{background:#fff;border-radius:18px;padding:26px;box-shadow:0 8px 28px #173a5a18}
+header{text-align:center;background:var(--navy);color:#fff;border-radius:15px;padding:24px 18px;margin-bottom:20px}
+header .tag{display:inline-block;background:var(--gold);color:#263746;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:bold}
+h1{font-size:clamp(23px,4vw,32px);margin:12px 0 5px}
+header p{margin:0;color:#e3edf7}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+label{font-weight:bold;font-size:14px}
+input[type=text]{width:100%;padding:12px;border:1px solid #cbd8e4;border-radius:9px;font-size:16px;margin-top:5px}
+.note{background:var(--pale);border-left:4px solid var(--blue);padding:12px 15px;border-radius:8px;font-size:14px}
+.progress{height:9px;background:#e6edf3;border-radius:9px;overflow:hidden;margin:20px 0 6px}
+#bar{height:100%;width:0;background:var(--gold);transition:width .2s}
+.qtop{display:flex;justify-content:space-between;gap:12px;color:#526579;font-size:13px;font-weight:bold}
+.question{border:1px solid #e0e8ef;border-radius:13px;padding:17px;margin:15px 0}
+.question h3{font-size:17px;margin:0 0 12px;color:var(--navy)}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 11px;border:1px solid #e2eaf1;border-radius:9px;margin:8px 0;cursor:pointer}
+.opt:hover{background:#f5faff;border-color:#8eb8da}
+.opt input{margin-top:4px;accent-color:var(--blue)}
+button{border:0;border-radius:10px;padding:13px 20px;font-size:16px;font-weight:bold;cursor:pointer}
+#submit{background:var(--blue);color:#fff;width:100%;margin-top:10px}
+#submit:hover{background:var(--navy)}
+#reset{background:#eaf1f7;color:var(--navy);margin-top:14px}
+#result{display:none;margin-top:22px;padding:20px;border-radius:13px;background:#f1f8f3;border:1px solid #c8e5d1}
+#score{font-size:28px;color:var(--green);font-weight:bold}
+.feedback{padding:11px 0;border-top:1px solid #dce9df}
+.correct{color:var(--green);font-weight:bold}.wrong{color:var(--red);font-weight:bold}
+footer{text-align:center;color:#64778a;font-size:12px;margin:18px}
+@media(max-width:560px){.wrap{margin:8px auto;padding:10px}.card{padding:16px}.info{grid-template-columns:1fr}header{padding:20px 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+<header>
+<span class="tag">KUIS IPA TERPADU • KELAS IX MTs</span>
+<h1>Konsep dan Penerapan Tekanan Hidrostatis</h1>
+<p>Uji pemahamanmu melalui 15 soal pilihan ganda!</p>
+<div style="margin:18px auto 0;max-width:520px;text-align:left;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.25);border-radius:11px;padding:12px 16px;font-size:14px;line-height:1.8">
+  <div><strong>Guru:</strong> Pansurna, S.Pd.I., M.Pd.</div>
+  <div><strong>Madrasah:</strong> MTsN 1 Nagan Raya</div>
+  <div><strong>Pelajaran:</strong> IPA Terpadu</div>
+  <div><strong>Kelas/Fase:</strong> IX.2 / Fase D</div>
+</div>
+</header>
+<div class="info">
+<div><label for="nama">Nama lengkap</label><input id="nama" type="text" placeholder="Tuliskan nama kamu"></div>
+<div><label for="kelas">Kelas</label><input id="kelas" type="text" placeholder="Contoh: IX-A"></div>
+</div>
+<div class="note"><b>Petunjuk:</b> Bacalah setiap soal dengan teliti, lalu pilih satu jawaban yang paling tepat. Gunakan percepatan gravitasi <b>g = 10 m/s²</b> jika tidak disebutkan lain. Setiap jawaban benar bernilai  sebesar  1 poin. Kerjakan secara mandiri.</div>
+<div class="progress"><div id="bar"></div></div>
+<div class="qtop"><span id="answered">0 dari 15 soal dijawab</span><span>15 soal</span></div>
+<form id="quiz">
+<div id="questions"></div>
+<button id="submit" type="submit">Kirim Jawaban dan Lihat Nilai</button>
+</form>
+<section id="result">
+<h2>Hasil Kuis</h2>
+<div id="score"></div>
+<p id="summary"></p>
+<div id="review"></div>
+<button id="reset" type="button" onclick="location.reload()">Ulangi Kuis</button>
+</section>
+</div>
+<footer>Belajar IPA dengan semangat, jujur, dan percaya diri.</footer>
+</div>
+<script>
+const data = [
+{q:"Tekanan hidrostatis adalah tekanan yang ditimbulkan oleh ....",o:["berat benda padat di dasar wadah","zat cair yang diam karena pengaruh kedalaman","aliran udara di atas permukaan air","gaya gesek antara dua benda"],a:1,e:"Tekanan hidrostatis muncul karena berat zat cair di atas suatu titik."},
+{q:"Besarnya tekanan hidrostatis dipengaruhi oleh ....",o:["kedalaman, massa jenis zat cair, dan gravitasi","bentuk wadah dan luas permukaan","warna dan volume wadah","luas alas wadah dan suhu ruangan"],a:0,e:"Rumusnya P = ρgh; faktor penentunya adalah massa jenis, gravitasi, dan kedalaman."},
+{q:"Rumus tekanan hidrostatis yang benar adalah ....",o:["P = F × A","P = ρ × g × h","P = m × v","P = ρ × V"],a:1,e:"P adalah tekanan, ρ massa jenis zat cair, g gravitasi, dan h kedalaman."},
+{q:"Satuan tekanan dalam SI adalah ....",o:["newton","joule","pascal","kilogram"],a:2,e:"Satu pascal (Pa) sama dengan satu newton per meter persegi (N/m²)."},
+{q:"Dua titik berada dalam air yang sama dan memiliki kedalaman berbeda. Tekanan paling besar terdapat pada titik yang ....",o:["paling dekat permukaan","paling dalam","paling dekat dinding","memiliki jarak terjauh dari dasar"],a:1,e:"Semakin dalam posisi titik dari permukaan, semakin besar tekanan hidrostatisnya."},
+{q:"Di dalam air tawar (ρ = 1.000 kg/m³), sebuah titik berada 2 m di bawah permukaan. Tekanan hidrostatisnya adalah ....",o:["2.000 Pa","10.000 Pa","20.000 Pa","200.000 Pa"],a:2,e:"P = ρgh = 1.000 × 10 × 2 = 20.000 Pa."},
+{q:"Seorang penyelam turun dari kedalaman 2 m ke 5 m. Tekanan hidrostatis yang dialaminya akan ....",o:["berkurang","tetap","bertambah","menjadi nol"],a:2,e:"Kedalaman bertambah, sehingga tekanan hidrostatis juga bertambah."},
+{q:"Pada kedalaman yang sama, tekanan hidrostatis air laut lebih besar daripada air tawar karena air laut memiliki ....",o:["massa jenis lebih besar","warna lebih gelap","suhu selalu lebih tinggi","volume lebih kecil"],a:0,e:"Pada kedalaman dan gravitasi yang sama, zat cair bermassa jenis lebih besar menghasilkan tekanan lebih besar."},
+{q:"Sebuah bejana berisi minyak dengan massa jenis 800 kg/m³. Tekanan hidrostatis pada kedalaman 0,5 m adalah ....",o:["400 Pa","2.000 Pa","4.000 Pa","8.000 Pa"],a:2,e:"P = 800 × 10 × 0,5 = 4.000 Pa."},
+{q:"Dinding bendungan dibuat lebih tebal pada bagian bawah karena ....",o:["air di bagian bawah lebih dingin","tekanan hidrostatis semakin besar pada kedalaman lebih besar","air di bagian atas tidak memiliki tekanan","bagian bawah selalu lebih luas"],a:1,e:"Tekanan air meningkat seiring bertambahnya kedalaman, sehingga bagian bawah bendungan menerima tekanan lebih besar."},
+{q:"Jika kedalaman suatu titik menjadi dua kali semula, sedangkan zat cair dan gravitasi tetap, tekanan hidrostatis menjadi ....",o:["setengah kali","dua kali","tiga kali","empat kali"],a:1,e:"Tekanan hidrostatis berbanding lurus dengan kedalaman."},
+{q:"Tiga lubang dibuat pada sisi botol berisi air: lubang atas, tengah, dan bawah. Air dari lubang yang memancar paling jauh umumnya berasal dari ....",o:["lubang paling atas","lubang tengah","lubang paling bawah","semua sama jauh"],a:2,e:"Tekanan di lubang paling bawah paling besar, sehingga pancaran air umumnya paling kuat/jauh."},
+{q:"Tekanan hidrostatis pada titik-titik yang berada pada kedalaman sama dalam zat cair sejenis adalah ....",o:["sama besar","selalu berbeda","bergantung bentuk wadah","bergantung luas permukaan wadah"],a:0,e:"Pada zat cair sejenis dan kedalaman yang sama, tekanan hidrostatis sama besar, tidak bergantung bentuk wadah."},
+{q:"Tekanan hidrostatis pada kedalaman 3 m di air (ρ = 1.000 kg/m³, g = 10 m/s²) adalah ....",o:["3.000 Pa","10.000 Pa","30.000 Pa","300.000 Pa"],a:2,e:"P = 1.000 × 10 × 3 = 30.000 Pa."},
+{q:"Penerapan konsep tekanan hidrostatis dalam kehidupan sehari-hari ditunjukkan oleh ....",o:["pisau dibuat tajam agar mudah memotong","kapal mengapung di permukaan air","tandon air diletakkan lebih tinggi agar air mengalir ke keran","rem kendaraan menggunakan prinsip tuas"],a:2,e:"Perbedaan ketinggian permukaan air dan keran menghasilkan tekanan yang membantu air mengalir."}
+];
+const letters=["A","B","C","D"];
+const holder=document.getElementById("questions");
+data.forEach((item,i)=>{
+ const box=document.createElement("section"); box.className="question";
+ const h=document.createElement("h3"); h.textContent=`${i+1}. ${item.q}`; box.appendChild(h);
+ item.o.forEach((opt,j)=>{
+  const lab=document.createElement("label"); lab.className="opt";
+  const inp=document.createElement("input"); inp.type="radio"; inp.name=`q${i}`; inp.value=j;
+  inp.addEventListener("change",updateProgress);
+  const span=document.createElement("span"); span.textContent=`${letters[j]}. ${opt}`;
+  lab.append(inp,span); box.appendChild(lab);
+ });
+ holder.appendChild(box);
+});
+function updateProgress(){
+ const n=data.filter((_,i)=>document.querySelector(`input[name="q${i}"]:checked`)).length;
+ document.getElementById("answered").textContent=`${n} dari 15 soal dijawab`;
+ document.getElementById("bar").style.width=(n/15*100)+"%";
+}
+document.getElementById("quiz").addEventListener("submit",function(ev){
+ ev.preventDefault();
+ const nama=document.getElementById("nama").value.trim();
+ const kelas=document.getElementById("kelas").value.trim();
+ if(!nama||!kelas){alert("Mohon isi nama lengkap dan kelas terlebih dahulu.");return;}
+ const unanswered=data.findIndex((_,i)=>!document.querySelector(`input[name="q${i}"]:checked`));
+ if(unanswered!==-1){alert(`Soal nomor ${unanswered+1} belum dijawab. Lengkapi semua soal terlebih dahulu.`);document.querySelectorAll(".question")[unanswered].scrollIntoView({behavior:"smooth",block:"center"});return;}
+ let score=0; const review=document.getElementById("review"); review.innerHTML="";
+ data.forEach((item,i)=>{
+  const chosen=Number(document.querySelector(`input[name="q${i}"]:checked`).value);
+  const ok=chosen===item.a; if(ok)score++;
+  const div=document.createElement("div");div.className="feedback";
+  const status=document.createElement("div");status.className=ok?"correct":"wrong";
+  status.textContent=`Soal ${i+1}: ${ok?"Benar":"Belum tepat"} — Jawaban benar: ${letters[item.a]}. ${item.o[item.a]}`;
+  const expl=document.createElement("div");expl.textContent=item.e;
+  div.append(status,expl);review.appendChild(div);
+ });
+ document.getElementById("score").textContent=`${score}/15 • ${Math.round(score/15*100)}`;
+ document.getElementById("summary").textContent=`Nama: ${nama} | Kelas: ${kelas}. ${score>=13?"Sangat baik!":score>=10?"Bagus, terus tingkatkan!":score>=7?"Cukup baik, pelajari kembali pembahasan.":"Tetap semangat! Pelajari materi dan coba lagi."}`;
+ document.getElementById("result").style.display="block";
+ document.getElementById("submit").disabled=true;
+ document.getElementById("submit").textContent="Kuis telah dikirim";
+ document.getElementById("result").scrollIntoView({behavior:"smooth"});
+});
+</script>
+</body>
+</html>
